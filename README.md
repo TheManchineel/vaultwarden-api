@@ -12,7 +12,7 @@ docker run \
     -p 8019:8019 \
     --name vaultwarden-api \
     --restart unless-stopped \
-    ghcr.io/TheManchineel/vaultwarden-api:latest
+    ghcr.io/themanchineel/vaultwarden-api:main
 ```
 
 Where `VAULTWARDEN_URL` is the main URL of your Vaultwarden instance (web vault), `VAULTWARDEN_TOKEN` is the administrator token, and `API_KEY` is the API key you want to use to access the API. If `API_KEY` is not set, the API will be accessible without authentication *(not a good idea!)*.

@@ -21,4 +21,4 @@ RUN apk add --no-cache gcc libffi-dev musl-dev && \
 FROM base as final
 COPY --from=builder /app/dist /app/dist
 RUN pip install /app/dist/*.whl
-CMD ["uvicorn", "vaultwarden_api:app", "--port", "8019"]
+CMD ["uvicorn", "vaultwarden_api:app", "--port", "8019", "--host", "0.0.0.0"]
