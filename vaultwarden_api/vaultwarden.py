@@ -1,8 +1,11 @@
-from requests import Session, Response
+from requests import Session, Response, HTTPError
 from bs4 import BeautifulSoup
 from uuid import UUID
 from datetime import datetime
+from time import sleep
 from .models import User, Organization
+
+AUTH_RETRY_SECONDS = 5
 
 
 def bytesize(size: str) -> int:
@@ -18,15 +21,26 @@ def bytesize(size: str) -> int:
 
 
 class VaultwardenAPI:
-    def authenticate(self):
-        response = self.session.post(self.url, data={"token": self.token})
-        response.raise_for_status()
+    def authenticate(self, retry: bool = False):
+        response: Response
+        while True:
+            try:
+                response = self.session.post(self.url, data={"token": self.token})
+                response.raise_for_status()
+                break
+            except HTTPError as e:
+                print(f"Failed to authenticate with Vaultwarden: {e}")
+                if not retry:
+                    raise e
+                else:
+                    print("Retrying in {AUTH_RETRY_SECONDS} seconds...")
+                    sleep(AUTH_RETRY_SECONDS)
 
     def __init__(self, url: str, token: str):
         self.url = url + "/admin"
         self.token = token
         self.session = Session()
-        self.authenticate()
+        self.authenticate(retry=True)
 
     def get_page(self, path: str) -> BeautifulSoup | None:
         response = self.session.get(f"{self.url}/{path}")
