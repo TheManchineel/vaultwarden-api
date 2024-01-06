@@ -86,8 +86,8 @@ class VaultwardenAPI:
             columns = row.find_all("td")
             name = columns[0].find("strong").text
             email = columns[6].select_one("span")["data-vw-user-email"]
-            created_at = datetime.strptime(columns[1].select_one("span").text, "%Y-%m-%d %H:%M:%S %Z")
-            last_active = datetime.strptime(columns[2].select_one("span").text, "%Y-%m-%d %H:%M:%S %Z")
+            created_at = datetime.strptime(columns[1].select_one("span").text, "%Y-%m-%d %H:%M:%S %z")
+            last_active = datetime.strptime(columns[2].select_one("span").text, "%Y-%m-%d %H:%M:%S %z")
             entries_count = int(columns[3].select_one("span").text)
 
             attachments_info = list(columns[4].children)
