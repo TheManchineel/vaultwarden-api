@@ -11,7 +11,8 @@ async def status(api_key: Annotated[str, Depends(get_api_key)]) -> dict:
     try:
         users = vw_api.get_users()
         organizations = vw_api.get_organizations()
-    except Exception:
+    except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail="Vaultwarden API error")
 
     return {
