@@ -15,9 +15,20 @@ def bytesize(size: str) -> int:
         "MB": 2**20,
         "GB": 2**30,
         "TB": 2**40,
-    }  # this is not the SI definition, but it's what VW uses
+    }  # this is not the SI definition, but it's what VW uses (https://github.com/dani-garcia/vaultwarden/blob/ae3a153bdb062414402ec94901fabb1105838674/src/util.rs#L370)
     (dim, unit) = size.split(" ")
     return int(float(dim) * units[unit])
+
+
+def parse_date(date_string: str) -> datetime:
+    # epoch 0
+    date = datetime.utcfromtimestamp(0)
+    try:
+        date = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S %Z")
+    except ValueError:  # when timezone is in offset format (e.g. "+00:00" instead of "UTC")
+        date = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S %z")
+    finally:
+        return date
 
 
 class VaultwardenAPI:
@@ -86,8 +97,8 @@ class VaultwardenAPI:
             columns = row.find_all("td")
             name = columns[0].find("strong").text
             email = columns[6].select_one("span")["data-vw-user-email"]
-            created_at = datetime.strptime(columns[1].select_one("span").text, "%Y-%m-%d %H:%M:%S %z")
-            last_active = datetime.strptime(columns[2].select_one("span").text, "%Y-%m-%d %H:%M:%S %z")
+            created_at = parse_date(columns[1].select_one("span").text)
+            last_active = parse_date(columns[2].select_one("span").text)
             entries_count = int(columns[3].select_one("span").text)
 
             attachments_info = list(columns[4].children)
