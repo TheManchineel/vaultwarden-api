@@ -22,13 +22,11 @@ def bytesize(size: str) -> int:
 
 def parse_date(date_string: str) -> datetime:
     # epoch 0
-    date = datetime.utcfromtimestamp(0)
     try:
         date = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S %Z")
     except ValueError:  # when timezone is in offset format (e.g. "+00:00" instead of "UTC")
         date = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S %z")
-    finally:
-        return date
+    return date
 
 
 class VaultwardenAPI:
@@ -44,7 +42,7 @@ class VaultwardenAPI:
                 if not retry:
                     raise e
                 else:
-                    print("Retrying in {AUTH_RETRY_SECONDS} seconds...")
+                    print(f"Retrying in {AUTH_RETRY_SECONDS} seconds...")
                     sleep(AUTH_RETRY_SECONDS)
 
     def __init__(self, url: str, token: str):

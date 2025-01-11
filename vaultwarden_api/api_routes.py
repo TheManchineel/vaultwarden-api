@@ -24,3 +24,25 @@ async def status(api_key: Annotated[str, Depends(get_api_key)]) -> dict:
         + sum(map(lambda o: o.attachments_count, organizations)),
         "total_attachment_size": sum(map(lambda u: u.attachments_size, users)),
     }
+
+
+@router.get("/users")
+async def users(api_key: Annotated[str, Depends(get_api_key)]) -> list[dict]:
+    try:
+        users = vw_api.get_users()
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail="Vaultwarden API error")
+
+    return [u.model_dump() for u in users]
+
+
+@router.get("/organizations")
+async def organizations(api_key: Annotated[str, Depends(get_api_key)]) -> list[dict]:
+    try:
+        organizations = vw_api.get_organizations()
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail="Vaultwarden API error")
+
+    return [o.model_dump() for o in organizations]

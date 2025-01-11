@@ -43,8 +43,10 @@ curl "http://localhost:8019/api/stats" \
 
 ### Endpoints
 
-| Method | Endpoint | Description                                       |
-| ------ | -------- | ------------------------------------------------- |
-| GET    | `/stats` | Returns statistics from the Vaultwarden instance. |
+| Method | Endpoint         | Description                                                  |
+| ------ | ---------------- | ------------------------------------------------------------ |
+| GET    | `/stats`         | Returns statistics from the Vaultwarden instance.            |
+| GET    | `/users`         | Returns a list of users in the Vaultwarden instance.         |
+| GET    | `/organizations` | Returns a list of organizations in the Vaultwarden instance. |
 
 More endpoints will be added in the future

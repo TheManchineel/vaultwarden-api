@@ -1,4 +1,4 @@
-from typing import Annotated, Optional
+from typing import Annotated
 from fastapi import HTTPException, Depends, status
 from fastapi.security import APIKeyHeader
 from os import getenv
@@ -11,8 +11,8 @@ if not API_KEY:
     print("⚠️ WARNING: API_KEY is not specified in the environment. The API will be open to the public. 😱")
 
 
-async def get_api_key(api_key: api_key_dependency if API_KEY else Optional[str] = ""):
-    if api_key == API_KEY:
+async def get_api_key(api_key: api_key_dependency):
+    if not API_KEY or api_key == API_KEY:
         return True
     else:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid API Key")
